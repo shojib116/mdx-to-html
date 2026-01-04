@@ -1,6 +1,17 @@
 import os
 from markdown_blocks import markdown_to_html_node
 
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+    items = os.listdir(dir_path_content)
+    for item in items:
+        item_path = os.path.join(dir_path_content, item)
+        if os.path.isfile(item_path):
+            generate_page(item_path, template_path, os.path.join(dest_dir_path, "index.html"))
+        else:
+            dest_path = os.path.join(dest_dir_path, item)
+            os.makedirs(dest_path, exist_ok=True)
+            generate_pages_recursive(item_path, template_path, dest_path)
+
 def generate_page(from_path, template_path, dest_path):
     print(f" * {from_path} {template_path} -> {dest_path}")
 

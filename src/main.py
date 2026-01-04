@@ -1,21 +1,30 @@
 import os
 import shutil
 from copystatic import copy_files_recursive
+from gencontent import generate_page
 
+dir_path_static = "./static"
+dir_path_public = "./public"
+dir_path_content = "./content"
+template_path = "./template.html"
 
 def main():
-    copyTo = "./public"
-    copyFrom = "./static"
+    if os.path.exists(dir_path_public):
+        shutil.rmtree(dir_path_public)
+    os.mkdir(dir_path_public)
 
-    if os.path.exists(copyTo):
-        shutil.rmtree(copyTo)
-    os.mkdir(copyTo)
-
-    if not os.path.exists(copyFrom):
+    if not os.path.exists(dir_path_static):
         raise Exception("static directory could not be found")
     
     print("Copying static files to public directory")
-    copy_files_recursive(copyFrom, copyTo)
+    copy_files_recursive(dir_path_static, dir_path_public)
+    
+    print("Generating page...")
+    generate_page(
+        os.path.join(dir_path_content, "index.md"),
+        template_path,
+        os.path.join(dir_path_public, "index.html")
+    )
 
 main()
 
